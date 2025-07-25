@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Telegram Sender Login</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #141e30, #243b55);
+      color: white;
+      padding: 40px;
+      text-align: center;
+    }
+
+    .box {
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 30px;
+      border-radius: 12px;
+      max-width: 400px;
+      margin: auto;
+    }
+
+    input, select, button {
+      padding: 10px;
+      margin: 10px 0;
+      width: 90%;
+      border-radius: 8px;
+      border: none;
+      font-size: 16px;
+    }
+
+    button {
+      background-color: #29b6f6;
+      color: white;
+      cursor: pointer;
+    }
+
+    #dashboard {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="login" class="box">
+    <h2>🔐 Login Panel</h2>
+    <input type="text" id="username" placeholder="Username"><br>
+    <input type="password" id="password" placeholder="Password"><br>
+    <button onclick="login()">Login</button>
+    <p id="loginStatus"></p>
+  </div>
+
+  <div id="dashboard" class="box">
+    <h2>🚀 Kirim Pesan Telegram</h2>
+    <input type="text" id="chatId" placeholder="ID atau Username Telegram"><br>
+
+    <label>Jumlah Kirim:</label><br>
+    <select id="jumlah">
+      ${Array.from({ length: 99 }, (_, i) => `<option value="${i + 1}">${i + 1}</option>`).join('')}
+    </select><br>
+
+    <button onclick="kirimPesan()">Kirim Pesan</button>
+    <p id="status"></p>
+  </div>
+
+  <script>
+    const PASSWORDS_URL = "https://raw.githubusercontent.com/justvinz/repo/main/passwords.json"; // ganti
+    const GITHUB_PESAN_URL = "https://raw.githubusercontent.com/justvinz/repo/main/pesan.txt"; // ganti
+    const BOT_TOKEN = "8213727800:AAGibwkPrsaMArgZmgKNtSKtZMWj1K9C4Jg"; // ganti
+
+    async function login() {
+      const user = document.getElementById("username").value.trim();
+      const pass = document.getElementById("password").value.trim();
+      const status = document.getElementById("loginStatus");
+
+      if (!user || !pass) {
+        status.innerText = "⚠️ Username dan password wajib diisi!";
+        return;
+      }
+
+      status.innerText = "⏳ Memeriksa...";
+
+      try {
+        const res = await fetch(PASSWORDS_URL);
+        const json = await res.json();
+
+        if (json[user] && json[user] === pass) {
+          status.innerText = "✅ Login berhasil!";
+          document.getElementById("login").style.display = "none";
+          document.getElementById("dashboard").style.display = "block";
+        } else {
+          status.innerText = "❌ Username atau password salah.";
+        }
+      } catch (e) {
+        status.innerText = "❌ Gagal mengakses password.";
+      }
+    }
+
+    async function kirimPesan() {
+      const chatIdInput = document.getElementById("chatId").value.trim();
+      const jumlah = parseInt(document.getElementById("jumlah").value);
+      const status = document.getElementById("status");
+
+      if (!chatIdInput || !jumlah) {
+        status.innerText = "⚠️ Lengkapi semua field!";
+        return;
+      }
+
+      status.innerText = "⏳ Mengambil pesan dari GitHub...";
+
+      let pesan;
+      try {
+        const res = await fetch(GITHUB_PESAN_URL);
+        pesan = await res.text();
+      } catch (e) {
+        status.innerText = "❌ Gagal mengambil pesan.";
+        return;
+      }
+
+      status.innerText = "⏳ Mengirim pesan ke Telegram...";
+
+      let total = 0;
+      for (let i = 0; i < jumlah; i++) {
+        const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_id: chatIdInput.startsWith("@") ? chatIdInput : parseInt(chatIdInput),
+            text: pesan
+          })
+        });
+
+        const data = await response.json();
+        if (!data.ok) {
+          status.innerText = `❌ Gagal kirim: ${data.description}`;
+          return;
+        }
+
+        total++;
+        await new Promise(resolve => setTimeout(resolve, 300)); // jeda 300ms
+      }
+
+      status.innerText = `✅ Berhasil mengirim ${total} pesan ke ${chatIdInput}`;
+    }
+  </script>
+</body>
+</html>
