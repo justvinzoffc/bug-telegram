@@ -10,7 +10,6 @@
       padding: 40px;
       text-align: center;
     }
-
     .box {
       background-color: rgba(255, 255, 255, 0.1);
       padding: 30px;
@@ -18,7 +17,6 @@
       max-width: 400px;
       margin: auto;
     }
-
     input, select, button {
       padding: 10px;
       margin: 10px 0;
@@ -27,13 +25,11 @@
       border: none;
       font-size: 16px;
     }
-
     button {
       background-color: #29b6f6;
       color: white;
       cursor: pointer;
     }
-
     #dashboard {
       display: none;
     }
@@ -50,21 +46,28 @@
 
   <div id="dashboard" class="box">
     <h2>🚀 Kirim Pesan Telegram</h2>
-    <input type="text" id="chatId" placeholder="ID atau Username Telegram"><br>
+    <input type="text" id="chatId" placeholder="ID atau Username Telegram (@user atau ID)"><br>
 
     <label>Jumlah Kirim:</label><br>
-    <select id="jumlah">
-      ${Array.from({ length: 99 }, (_, i) => `<option value="${i + 1}">${i + 1}</option>`).join('')}
-    </select><br>
+    <select id="jumlah"></select><br>
 
     <button onclick="kirimPesan()">Kirim Pesan</button>
     <p id="status"></p>
   </div>
 
   <script>
-    const PASSWORDS_URL = "https://raw.githubusercontent.com/justvinzoffc/bug-telegram/refs/heads/main/password.json"; // ganti
-    const GITHUB_PESAN_URL = "https://raw.githubusercontent.com/justvinzoffc/bug-telegram/refs/heads/main/pesan.txt"; // ganti
-    const BOT_TOKEN = "8213727800:AAGibwkPrsaMArgZmgKNtSKtZMWj1K9C4Jg"; // ganti
+    const PASSWORDS_URL = "https://raw.githubusercontent.com/justvinzoffc/bug-telegram/main/password.json";
+    const GITHUB_PESAN_URL = "https://raw.githubusercontent.com/justvinzoffc/bug-telegram/main/pesan.txt";
+    const BOT_TOKEN = "8213727800:AAGibwkPrsaMArgZmgKNtSKtZMWj1K9C4Jg"; // GANTI jika perlu
+
+    // Isi dropdown jumlah
+    const jumlahSelect = document.getElementById("jumlah");
+    for (let i = 1; i <= 99; i++) {
+      const option = document.createElement("option");
+      option.value = i;
+      option.textContent = i;
+      jumlahSelect.appendChild(option);
+    }
 
     async function login() {
       const user = document.getElementById("username").value.trim();
@@ -119,23 +122,28 @@
 
       let total = 0;
       for (let i = 0; i < jumlah; i++) {
-        const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            chat_id: chatIdInput.startsWith("@") ? chatIdInput : parseInt(chatIdInput),
-            text: pesan
-          })
-        });
+        try {
+          const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              chat_id: chatIdInput.startsWith("@") ? chatIdInput : parseInt(chatIdInput),
+              text: pesan
+            })
+          });
 
-        const data = await response.json();
-        if (!data.ok) {
-          status.innerText = `❌ Gagal kirim: ${data.description}`;
+          const data = await response.json();
+          if (!data.ok) {
+            status.innerText = `❌ Gagal kirim: ${data.description}`;
+            return;
+          }
+
+          total++;
+          await new Promise(resolve => setTimeout(resolve, 300)); // jeda 300ms
+        } catch (err) {
+          status.innerText = `❌ Gagal mengirim: ${err.message}`;
           return;
         }
-
-        total++;
-        await new Promise(resolve => setTimeout(resolve, 300)); // jeda 300ms
       }
 
       status.innerText = `✅ Berhasil mengirim ${total} pesan ke ${chatIdInput}`;
