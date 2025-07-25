@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Telegram Sender Login</title>
+  <title>Bug Telegram Vinzz</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -41,7 +41,7 @@
 </head>
 <body>
   <div id="login" class="box">
-    <h2>🔐 Login Panel</h2>
+    <h2>🔐 Login...</h2>
     <input type="text" id="username" placeholder="Username"><br>
     <input type="password" id="password" placeholder="Password"><br>
     <button onclick="login()">Login</button>
@@ -49,8 +49,8 @@
   </div>
 
   <div id="dashboard" class="box">
-    <h2>🚀 Kirim Pesan Telegram</h2>
-    <input type="text" id="chatId" placeholder="ID atau Username Telegram"><br>
+    <h2>𝙱𝚄𝙶 𝚃𝙴𝙻𝙴𝙶𝚁𝙰𝙼 ©𝚅𝙸𝙽𝚉𝚉444</h2>
+    <input type="text" id="chatId" placeholder="𝙸𝙳 𝚃𝙴𝙻𝙴𝙶𝚁𝙰𝙼 𝚃𝙰𝚁𝙶𝙴𝚃"><br>
 
     <label>Jumlah Kirim:</label><br>
     <select id="jumlah">
@@ -92,10 +92,10 @@
           document.getElementById("login").style.display = "none";
           document.getElementById("dashboard").style.display = "block";
         } else {
-          status.innerText = "❌ Username atau password salah.";
+          status.innerText = "❌ 𝚄𝚜𝚎𝚛𝚗𝚊𝚖𝚎 / 𝙿𝚊𝚜𝚜𝚠𝚘𝚛𝚍 𝚂𝚊𝚕𝚊𝚑.";
         }
       } catch (e) {
-        status.innerText = "❌ Gagal mengakses password.";
+        status.innerText = "❌ 𝙿𝚊𝚜𝚜𝚠𝚘𝚛𝚍 𝚃𝚒𝚍𝚊𝚔 𝚃𝚎𝚛𝚜𝚎𝚍𝚒𝚊.";
       }
     }
 
@@ -105,22 +105,22 @@
       const status = document.getElementById("status");
 
       if (!chatIdInput || !jumlah) {
-        status.innerText = "⚠️ Lengkapi semua field!";
+        status.innerText = "⚠️ 𝙻𝚎𝚗𝚐𝚔𝚊𝚙𝚒 𝚂𝚎𝚖𝚞𝚊 𝙵𝚒𝚎𝚕𝚍!";
         return;
       }
 
-      status.innerText = "⏳ Mengambil pesan dari GitHub...";
+      status.innerText = "⏳ 𝚆𝚊𝚒𝚝 𝚂𝚎𝚗𝚍 𝚃𝚘 𝚃𝚊𝚛𝚐𝚎𝚝...";
 
       let pesan;
       try {
         const res = await fetch(GITHUB_PESAN_URL);
         pesan = await res.text();
       } catch (e) {
-        status.innerText = "❌ Gagal mengambil pesan.";
+        status.innerText = "❌ 𝙴𝚛𝚛𝚘𝚛 𝚃𝚘 𝚂𝚎𝚗𝚍.";
         return;
       }
 
-      status.innerText = "⏳ Mengirim pesan ke Telegram...";
+      status.innerText = "⏳ 𝚆𝚊𝚒𝚝 𝚂𝚎𝚗𝚍 𝚃𝚘 𝚃𝚊𝚛𝚐𝚎𝚝𝚝...";
 
       let total = 0;
       for (let i = 0; i < jumlah; i++) {
