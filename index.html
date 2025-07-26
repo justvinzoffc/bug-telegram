@@ -41,7 +41,7 @@
 </head>
 <body>
   <div id="login" class="box">
-    <h2>🔐 Login...</h2>
+    <h2>🔐 Login</h2>
     <input type="text" id="username" placeholder="Username"><br>
     <input type="password" id="password" placeholder="Password"><br>
     <button onclick="login()">Login</button>
@@ -49,12 +49,11 @@
   </div>
 
   <div id="dashboard" class="box">
-    <h2>𝙱𝚄𝙶 𝚃𝙴𝙻𝙴𝙶𝚁𝙰𝙼 ©𝚅𝙸𝙽𝚉𝚉444</h2>
-    <input type="text" id="chatId" placeholder="𝙸𝙳 𝚃𝙴𝙻𝙴𝙶𝚁𝙰𝙼 𝚃𝙰𝚁𝙶𝙴𝚃"><br>
+    <h2>🚀 Bug Telegram Vinzz</h2>
+    <input type="text" id="chatId" placeholder="ID / @username Telegram"><br>
 
     <label>Jumlah Kirim:</label><br>
     <select id="jumlah">
-      <!-- Pilihan jumlah 1-99 -->
       <script>
         for (let i = 1; i <= 99; i++) {
           document.write(`<option value="${i}">${i}</option>`);
@@ -62,14 +61,15 @@
       </script>
     </select><br>
 
-    <button onclick="kirimPesan()">Kirim Pesan</button>
+    <button onclick="kirimPesan('pesan')">𝙱𝚕𝚊𝚗𝚔 𝙼𝚎𝚍𝚒𝚞𝚖</button>
+    <button onclick="kirimPesan('pesan1')">𝙱𝚕𝚊𝚗𝚔 𝙷𝚊𝚛𝚍</button>
+
     <p id="status"></p>
   </div>
 
   <script>
     const PASSWORDS_URL = "https://raw.githubusercontent.com/justvinzoffc/bug-telegram/main/password.json";
-    const GITHUB_PESAN_URL = "https://raw.githubusercontent.com/justvinzoffc/bug-telegram/main/pesan.txt";
-    const BOT_TOKEN = "8213727800:AAGibwkPrsaMArgZmgKNtSKtZMWj1K9C4Jg"; // ← Ganti jika perlu
+    const BOT_TOKEN = "8213727800:AAGibwkPrsaMArgZmgKNtSKtZMWj1K9C4Jg"; // Ganti jika perlu
 
     async function login() {
       const user = document.getElementById("username").value.trim();
@@ -77,11 +77,11 @@
       const status = document.getElementById("loginStatus");
 
       if (!user || !pass) {
-        status.innerText = "⚠️ Username dan password wajib diisi!";
+        status.innerText = "⚠️ Harap isi username & password!";
         return;
       }
 
-      status.innerText = "⏳ Memeriksa...";
+      status.innerText = "⏳ Memverifikasi...";
 
       try {
         const res = await fetch(PASSWORDS_URL);
@@ -92,35 +92,34 @@
           document.getElementById("login").style.display = "none";
           document.getElementById("dashboard").style.display = "block";
         } else {
-          status.innerText = "❌ 𝚄𝚜𝚎𝚛𝚗𝚊𝚖𝚎 / 𝙿𝚊𝚜𝚜𝚠𝚘𝚛𝚍 𝚂𝚊𝚕𝚊𝚑.";
+          status.innerText = "❌ Username / Password salah!";
         }
       } catch (e) {
-        status.innerText = "❌ 𝙿𝚊𝚜𝚜𝚠𝚘𝚛𝚍 𝚃𝚒𝚍𝚊𝚔 𝚃𝚎𝚛𝚜𝚎𝚍𝚒𝚊.";
+        status.innerText = "❌ Tidak dapat memuat password.json!";
       }
     }
 
-    async function kirimPesan() {
+    async function kirimPesan(pesanFile) {
       const chatIdInput = document.getElementById("chatId").value.trim();
       const jumlah = parseInt(document.getElementById("jumlah").value);
       const status = document.getElementById("status");
 
       if (!chatIdInput || !jumlah) {
-        status.innerText = "⚠️ 𝙻𝚎𝚗𝚐𝚔𝚊𝚙𝚒 𝚂𝚎𝚖𝚞𝚊 𝙵𝚒𝚎𝚕𝚍!";
+        status.innerText = "⚠️ Harap isi ID dan jumlah kirim!";
         return;
       }
 
-      status.innerText = "⏳ 𝚆𝚊𝚒𝚝 𝚂𝚎𝚗𝚍 𝚃𝚘 𝚃𝚊𝚛𝚐𝚎𝚝...";
-
+      const urlPesan = `https://raw.githubusercontent.com/justvinzoffc/bug-telegram/main/${pesanFile}.txt`;
       let pesan;
       try {
-        const res = await fetch(GITHUB_PESAN_URL);
+        const res = await fetch(urlPesan);
         pesan = await res.text();
       } catch (e) {
-        status.innerText = "❌ 𝙴𝚛𝚛𝚘𝚛 𝚃𝚘 𝚂𝚎𝚗𝚍.";
+        status.innerText = "❌ Gagal mengambil isi pesan!";
         return;
       }
 
-      status.innerText = "⏳ 𝚆𝚊𝚒𝚝 𝚂𝚎𝚗𝚍 𝚃𝚘 𝚃𝚊𝚛𝚐𝚎𝚝𝚝...";
+      status.innerText = "⏳ Mengirim pesan...";
 
       let total = 0;
       for (let i = 0; i < jumlah; i++) {
@@ -140,10 +139,10 @@
         }
 
         total++;
-        await new Promise(resolve => setTimeout(resolve, 300)); // jeda 300ms
+        await new Promise(resolve => setTimeout(resolve, 300)); // Jeda 300ms
       }
 
-      status.innerText = `✅ Berhasil mengirim ${total} pesan ke ${chatIdInput}`;
+      status.innerText = `✅ Sukses kirim ${total} pesan ke ${chatIdInput}`;
     }
   </script>
 </body>
